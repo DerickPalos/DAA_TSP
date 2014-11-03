@@ -4,9 +4,9 @@ import java.lang.Math;
 public class Graph {
 
 	public ArrayList<Double[]> cities;
-	public LinkedList<Double[]> linkCities;
 	public double bestCost;
 	public int[] bestTour;
+	public String bestTourString;
 
 	/**
 	 * Default constructor
@@ -79,25 +79,34 @@ public class Graph {
 	 * @return Distance between City A and City B
 	 */
 	private double distanceFormula(Double[] p1, Double[] p2) {
-		double x = p2[0] - p1[0];
-		double y = p2[1] - p1[1];
+		double x = p2[1] - p1[1];
+		double y = p2[2] - p1[2];
 		x = Math.pow(x, 2.0) + Math.pow(y, 2.0);
 		return Math.sqrt(x);		
 	}
-
+	
 	/**
 	 * Calculates total tour cost
-	 * @param currCity 
-	 * @param unusedCities
-	 * @return
+	 * @param currCity The current city we are measuring distance from
+	 * @param unusedCities The list of unused cities in the tour
+	 * @param origin The original starting city
+	 * @return The total distance of the tour
 	 */
-	public double tourCalc(Double[] currCity, LinkedList<Double[]> unusedCities)
+	public Tour tourCalc(Double[] currCity, LinkedList<Double[]> unusedCities, Double[] origin)
 	{
-		if(unusedCities.size() == 1){
-			return distanceFormula(currCity, unusedCities.get(0));
+		Tour t1 = new Tour();
+		//Base case
+		if(unusedCities.size() == 0){
+			t1.cost = distanceFormula(currCity, origin);
+			t1.tour = ((Integer) origin[0].intValue()).toString();
+			return t1;
 		}
+		
+		//Set comparison point for all unused cities
 		double shortestDistance = distanceFormula(currCity, unusedCities.get(0));
 		Double[] closestCity = unusedCities.get(0);
+		
+		//Compare distances from current city to all cities
 		for(Double[] c : unusedCities){
 			double currDist = distanceFormula(currCity, c);
 			if(currDist < shortestDistance){
@@ -105,7 +114,15 @@ public class Graph {
 				closestCity = c;
 			}
 		}
+		
+		//Remove
 		unusedCities.remove(closestCity);
-		return shortestDistance + tourCalc(closestCity, unusedCities);
+		
+		//Initialize Tour
+		t1.cost = shortestDistance;
+		t1.tour = ((Integer) closestCity[0].intValue()).toString();
+		
+		//Recursive Call
+		return t1.add(tourCalc(closestCity, unusedCities, origin));
 	}
 }

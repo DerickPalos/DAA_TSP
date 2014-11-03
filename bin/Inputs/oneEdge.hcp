@@ -1,0 +1,10 @@
+NAME : oneEdge
+COMMENT : Hamiltonian cycle problem 
+TYPE : HCP
+DIMENSION : 4
+EDGE_DATA_FORMAT : EDGE_LIST
+EDGE_DATA_SECTION
+1 4
+1 2
+-1
+EOF
