@@ -127,6 +127,10 @@ public class Parser {
 		return null;
 	} // Parse HCP
 
+	/**
+	 * Reads filename for .txt file produced by NEOS tool
+	 * Decides whether or not there is a Hamiltonian Circuit
+	 */
 	public void parseHCPout() {
 		in = new Scanner(System.in);
 		boolean success = false;
